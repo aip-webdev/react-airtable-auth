@@ -1,0 +1,5 @@
+/.idea
+/node_modules/
+events.json
+/src/cache/
+/package-lock.json
