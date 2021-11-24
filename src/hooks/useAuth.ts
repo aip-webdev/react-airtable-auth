@@ -6,7 +6,7 @@ import {filter} from "ramda";
 import {useAppStore} from "./useAppStore";
 
 
-export default function useLogin({email, password}: IUser) {
+export default function useAuth({email, password}: IUser) {
     const [state, dispatch] = useAppStore()
 
     useEffect(() => {

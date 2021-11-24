@@ -5,7 +5,7 @@ import TextField from "@mui/material/TextField";
 import ArrowForwardOutlinedIcon from '@mui/icons-material/ArrowForwardOutlined';
 import styles from "./styles";
 import {validateEmail} from "../../utils/validateEmail";
-import useLogin from "../../hooks/useLogin";
+import useAuth from "../../hooks/useAuth";
 import {useNavigate} from "react-router-dom";
 
 export function SignUpPage() {
@@ -24,7 +24,7 @@ export function SignUpPage() {
         if (!validateEmail(email)) setErrorMail(true)
         if (password.length < 6) setErrorPass(true)
         if (errorPass || errorMail) return;
-        useLogin({email, password})
+        useAuth({email, password})
 
     }
 
@@ -50,6 +50,7 @@ export function SignUpPage() {
             // @ts-ignore
             sx={styles.container}>
             <Box
+                id='signup-form'
                 component="form"
                 // @ts-ignore
                 sx={styles.form}
@@ -62,6 +63,7 @@ export function SignUpPage() {
                     id="outlined-required"
                     label="Login"
                     type="email"
+                    autoComplete="username"
                     helperText="Send your email"
                     value={email}
                     onChange={handleChangeLogin}
@@ -74,7 +76,7 @@ export function SignUpPage() {
                     id="outlined-password-input"
                     label="Password"
                     type="password"
-                    autoComplete="current-password"
+                    autoComplete="new-password"
                     helperText={errorPass && "The password must contain at least 6 characters"}
                     value={password}
                     onChange={handleChangePassword}

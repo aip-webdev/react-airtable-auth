@@ -2,7 +2,7 @@ import React, {ChangeEvent, useState} from 'react';
 import {Box, Button, Container, TextField} from "@mui/material";
 import SendIcon from '@mui/icons-material/Send';
 import HowToRegOutlinedIcon from '@mui/icons-material/HowToRegOutlined';
-import useLogin from "../../hooks/useLogin";
+import useAuth from "../../hooks/useAuth";
 import styles from "./styles";
 import {validateEmail} from "../../utils/validateEmail";
 import {useNavigate} from "react-router-dom";
@@ -14,7 +14,7 @@ export function LoginPage() {
     const [errorMail, setErrorMail] = useState(false)
     const [errorPass, setErrorPass] = useState(false)
     const handleClick: () => void = () => {
-        useLogin({email, password})
+        useAuth({email, password})
     }
 
     const handleChangeLogin: (e: ChangeEvent) => void = (e) => {
@@ -39,10 +39,10 @@ export function LoginPage() {
             // @ts-ignore
             sx={styles.container}>
             <Box
+                id='signin-form'
                 component="form"
                 // @ts-ignore
                 sx={styles.form}
-                validate
                 autoComplete="off"
             >
                 <TextField
@@ -52,6 +52,7 @@ export function LoginPage() {
                     id="outlined-required"
                     label="Login"
                     type="email"
+                    autoComplete="username"
                     helperText="Send your email"
                     value={email}
                     onChange={handleChangeLogin}

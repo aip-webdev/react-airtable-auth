@@ -1,22 +1,22 @@
 import {merge} from "ramda";
 import {IStateData, MyAction} from "../../../types/global";
 import {
-    FETCH_USERS, FETCH_USERS_SUCCESS, FETCH_USER_FAILURE, SET_AUTH
+    FETCH_USERS, FETCH_USERS_SUCCESS, FETCH_USERS_FAILURE, SET_AUTH, CREATE_NEW_USER
 } from "../actions";
 
 import {Reducer} from "react";
+import {usersReducer} from "./usersReducer";
 //@ts-ignore
 const rootReducer: Reducer<IStateData, MyAction> = (state, action) => {
     switch (action.type) {
         case FETCH_USERS:
-            //@ts-ignore
-            return merge(state, {usersData: merge(state.usersData, {loading: action.payload})});
         case FETCH_USERS_SUCCESS:
-        case FETCH_USER_FAILURE:
-            return merge(state, {usersData: action.payload})
+        case FETCH_USERS_FAILURE:
+            return merge(state, {usersData: usersReducer(state.usersData, action)});
+        case CREATE_NEW_USER:
+            return merge(state, {usersData:{users: userReducer(state.usersData.users, action), loading: false, error: false}})
         case SET_AUTH:
             return merge(state, {isAuth: action.payload})
-
     }
 }
 

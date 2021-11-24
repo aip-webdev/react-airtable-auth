@@ -3,13 +3,17 @@ import {IUser, IUsersData} from "../../../types/global";
 export const FETCH_USERS = 'FETCH_USERS';
 export interface FetchUsersAction {
     type: typeof FETCH_USERS;
-    payload: boolean;
+    payload: IUsersData;
 }
 
 export function fetchUsers(): FetchUsersAction {
     return {
         type: FETCH_USERS,
-        payload: true
+        payload: {
+            users: [],
+            loading: true,
+            error: false
+        }
     }
 }
 
@@ -30,15 +34,15 @@ export function fetchUsersSuccess(users : IUser[]): FetchUsersSuccessAction {
     }
 }
 
-export const FETCH_USER_FAILURE = 'FETCH_USER_FAILURE';
+export const FETCH_USERS_FAILURE = 'FETCH_USER_FAILURE';
 export interface FetchUsersFailureAction {
-    type: typeof FETCH_USER_FAILURE;
+    type: typeof FETCH_USERS_FAILURE;
     payload: IUsersData;
 }
 
 export function fetchUsersFailure(): FetchUsersFailureAction {
     return {
-        type: FETCH_USER_FAILURE,
+        type: FETCH_USERS_FAILURE,
         payload: {
             users: [],
             loading: false,
@@ -60,3 +64,15 @@ export function setAuth(isAuth: boolean): SetAuthAction {
     }
 }
 
+export const CREATE_NEW_USER = 'CREATE_NEW_USER';
+export interface CreateNewUserAction {
+    type: typeof CREATE_NEW_USER,
+    payload: IUser []
+}
+
+export function createNewUser(user: IUser): CreateNewUserAction {
+    return {
+        type: CREATE_NEW_USER,
+        payload: [user]
+    }
+}
