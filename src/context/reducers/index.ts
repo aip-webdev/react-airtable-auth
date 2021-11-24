@@ -6,7 +6,8 @@ import {
 
 import {Reducer} from "react";
 import {usersReducer} from "./usersReducer";
-//@ts-ignore
+import {userReducer} from "./userReducer";
+
 const rootReducer: Reducer<IStateData, MyAction> = (state, action) => {
     switch (action.type) {
         case FETCH_USERS:
@@ -14,7 +15,7 @@ const rootReducer: Reducer<IStateData, MyAction> = (state, action) => {
         case FETCH_USERS_FAILURE:
             return merge(state, {usersData: usersReducer(state.usersData, action)});
         case CREATE_NEW_USER:
-            return merge(state, {usersData:{users: userReducer(state.usersData.users, action), loading: false, error: false}})
+            return merge(state, {usersData:{users: userReducer(state.usersData.users, action), loading: false, error: false}, isAuth: true})
         case SET_AUTH:
             return merge(state, {isAuth: action.payload})
     }

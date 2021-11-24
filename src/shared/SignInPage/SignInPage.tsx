@@ -6,15 +6,17 @@ import useAuth from "../../hooks/useAuth";
 import styles from "./styles";
 import {validateEmail} from "../../utils/validateEmail";
 import {useNavigate} from "react-router-dom";
+import {addStringId} from "../../utils/react/generateRandomIndex";
+import useAuthNewUser from "../../hooks/useAuthNewUser";
 
-export function LoginPage() {
+export function SignInPage() {
     let navigate = useNavigate();
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [errorMail, setErrorMail] = useState(false)
     const [errorPass, setErrorPass] = useState(false)
     const handleClick: () => void = () => {
-        useAuth({email, password})
+        useAuthNewUser(addStringId({email, password}))
     }
 
     const handleChangeLogin: (e: ChangeEvent) => void = (e) => {

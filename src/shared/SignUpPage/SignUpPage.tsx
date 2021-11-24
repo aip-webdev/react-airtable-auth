@@ -7,6 +7,7 @@ import styles from "./styles";
 import {validateEmail} from "../../utils/validateEmail";
 import useAuth from "../../hooks/useAuth";
 import {useNavigate} from "react-router-dom";
+import {addStringId} from "../../utils/react/generateRandomIndex";
 
 export function SignUpPage() {
     let navigate = useNavigate();
@@ -24,8 +25,7 @@ export function SignUpPage() {
         if (!validateEmail(email)) setErrorMail(true)
         if (password.length < 6) setErrorPass(true)
         if (errorPass || errorMail) return;
-        useAuth({email, password})
-
+        useAuth(addStringId({email, password}))
     }
 
     const handleChangeLogin: (e: ChangeEvent) => void = (e) => {

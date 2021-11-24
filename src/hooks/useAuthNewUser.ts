@@ -1,17 +1,23 @@
 import {useEffect} from 'react'
 
-import {setAuth} from "../context/actions";
+import {createNewUser} from "../context/actions";
 import {IUser} from "../../types/global";
-import {filter} from "ramda";
 import {useAppStore} from "./useAppStore";
 
 
-export default function useAuth({email, password}: IUser) {
+export default function useAuthNewUser({id, email, password}: IUser) {
     const [state, dispatch] = useAppStore()
 
     useEffect(() => {
-        let user = filter(((user: IUser) => user.email === email && user.password === password), state.usersData.users)
-        dispatch(setAuth(!!user))
+        let user = {id, email, password};
+        dispatch(createNewUser(user))
+        if (!localStorage.getItem('users')) {
+            localStorage.setItem('users', JSON.stringify([user]))
+        } else {
+            let users = JSON.parse(<string>localStorage.getItem('users'))
+            users.add(user)
+            localStorage.setItem('users', JSON.stringify(users))
+        }
     }, [])
 
     return state.isAuth

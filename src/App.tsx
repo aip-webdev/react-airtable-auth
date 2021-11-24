@@ -7,7 +7,7 @@ import HomePage from './shared/HomePage/HomePage';
 import React, {useEffect, useState} from 'react';
 import {AppProvider} from "./context";
 import useUsersData from "./hooks/useUsersData";
-import {LoginPage} from "./shared/LoginPage";
+import {SignInPage} from "./shared/SignInPage";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import {SignUpPage} from "./shared/SignUpPage";
 import {Layout} from "./shared/Layout";
@@ -32,7 +32,7 @@ function AppComponent() {
                                     <HomePage/>
                                 </RequiredAuth>
                             }/>
-                            <Route path='/signin' element={<LoginPage/>}/>
+                            <Route path='/signin' element={<SignInPage/>}/>
                             <Route path='/signup' element={<SignUpPage/>}/>
                         </Route>
                     </Routes>

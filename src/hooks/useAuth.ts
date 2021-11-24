@@ -5,7 +5,6 @@ import {IUser} from "../../types/global";
 import {filter} from "ramda";
 import {useAppStore} from "./useAppStore";
 
-
 export default function useAuth({email, password}: IUser) {
     const [state, dispatch] = useAppStore()
 
