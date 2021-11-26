@@ -4,7 +4,7 @@ import SendIcon from "@mui/icons-material/Send";
 import HowToRegOutlinedIcon from "@mui/icons-material/HowToRegOutlined";
 import {useNavigate} from "react-router-dom";
 import styles from "./styles";
-import {ISignBtnProps} from "../../Components/AuthForm";
+import {ISignBtnProps} from "../AuthForm";
 
 
 export function SignInBtnGroup(props: ISignBtnProps) {

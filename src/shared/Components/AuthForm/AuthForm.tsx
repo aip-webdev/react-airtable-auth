@@ -58,8 +58,9 @@ export const AuthForm = ({children, authUser}: IAuthProps) => {
                     setErrorMail({errorMail: true, errorMailText: res.message} ) :
                     setErrorPass({errorPass: true, errorPassText: res.message} )
             } else {
+                localStorage.setItem('isAuth', JSON.stringify( true))
                 setEmail('');
-                setPassword('')
+                setPassword('');
             }
         }
     }
@@ -97,7 +98,6 @@ export const AuthForm = ({children, authUser}: IAuthProps) => {
             })()
                 .then((res) => {
                     setChildWithProps(res)
-                    console.log(res)
                 })
         } catch (e: any) {
             console.log(e.toString())

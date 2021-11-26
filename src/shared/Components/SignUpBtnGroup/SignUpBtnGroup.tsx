@@ -4,7 +4,7 @@ import SendIcon from "@mui/icons-material/Send";
 import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
 import {useNavigate} from "react-router-dom";
 import styles from "./styles";
-import {ISignBtnProps} from "../../Components/AuthForm";
+import {ISignBtnProps} from "../AuthForm";
 
 export const SignUpBtnGroup = function (props: ISignBtnProps) {
     const {inputError, handleClick, user} = props;

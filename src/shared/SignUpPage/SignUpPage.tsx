@@ -1,22 +1,23 @@
 import React from 'react';
 import {useAppStore} from "../../hooks/useAppStore";
-import {IUser} from "../../../types/global";
+import {IUser, IUsersData} from "../../../types/global";
 import {AuthForm} from "../Components/AuthForm";
 import {createNewUser} from "../../context/actions";
-import {SignUpBtnGroup} from "./SignUpBtnGroup";
+import {SignUpBtnGroup} from "../Components/SignUpBtnGroup";
 import {Navigate, useLocation} from "react-router-dom";
 import {filter} from "ramda";
+import useUsersData from "../../hooks/useUsersData";
 
 export function SignUpPage() {
     const [state, dispatch] = useAppStore()
     const location = useLocation();
+    let {users, loading, error}: IUsersData = useUsersData()
     function createUser (user: IUser) {
+        if (loading || error) return;
         try {
-            let duplicate = filter(((someUser: IUser) =>
-                someUser.email === user.email && someUser.password === user.password),
-                state.usersData.users
-            )
-            if (duplicate) return {type: 'mailError', message:'Аккаунт с таким адресом уже зарегистрирован'};
+            if (users) users = Array.of(...users)
+            let duplicate = filter((someUser: IUser) => someUser.email === user.email, users)
+            if (duplicate.length > 0) return {type: 'mailError', message:'Аккаунт с таким адресом уже зарегистрирован'};
 
             dispatch(createNewUser(user))
             let usersArr: IUser[] = JSON.parse(localStorage.getItem('users') as string)
@@ -27,7 +28,7 @@ export function SignUpPage() {
                 localStorage.setItem('users', JSON.stringify([user]))
             }
         } catch (e) {
-
+            console.log(e)
         }
     }
 

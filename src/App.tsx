@@ -10,9 +10,13 @@ import {SignInPage} from "./shared/SignInPage";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import {SignUpPage} from "./shared/SignUpPage";
 import {RequiredAuth} from "./shared/Components/RequiredAuth";
+import useUsersData from "./hooks/useUsersData";
+import useAuthData from "./hooks/useAuthData";
 
 function AppComponent() {
     const [mounted, setMounted] = useState(false);
+    useUsersData();
+    useAuthData()
     useEffect(() => {
         setMounted(true);
     }, []);
