@@ -1,99 +1,44 @@
-import React, {ChangeEvent, useState} from 'react';
-import {Box, Button, Container} from "@mui/material";
-import SendIcon from '@mui/icons-material/Send';
-import TextField from "@mui/material/TextField";
-import ArrowForwardOutlinedIcon from '@mui/icons-material/ArrowForwardOutlined';
-import styles from "./styles";
-import {validateEmail} from "../../utils/validateEmail";
-import useAuth from "../../hooks/useAuth";
-import {useNavigate} from "react-router-dom";
-import {addStringId} from "../../utils/react/generateRandomIndex";
+import React from 'react';
+import {useAppStore} from "../../hooks/useAppStore";
+import {IUser} from "../../../types/global";
+import {AuthForm} from "../Components/AuthForm";
+import {createNewUser} from "../../context/actions";
+import {SignUpBtnGroup} from "./SignUpBtnGroup";
+import {Navigate, useLocation} from "react-router-dom";
+import {filter} from "ramda";
 
 export function SignUpPage() {
-    let navigate = useNavigate();
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [errorMail, setErrorMail] = useState(false)
-    const [errorPass, setErrorPass] = useState(false)
+    const [state, dispatch] = useAppStore()
+    const location = useLocation();
+    function createUser (user: IUser) {
+        try {
+            let duplicate = filter(((someUser: IUser) =>
+                someUser.email === user.email && someUser.password === user.password),
+                state.usersData.users
+            )
+            if (duplicate) return {type: 'mailError', message:'Аккаунт с таким адресом уже зарегистрирован'};
 
-    const handleClick: () => void = () => {
-        if (!email) {
-            return setErrorMail(true);
-        } else if (!password) {
-            setErrorPass(true);
+            dispatch(createNewUser(user))
+            let usersArr: IUser[] = JSON.parse(localStorage.getItem('users') as string)
+            if (usersArr) {
+                usersArr.push(user)
+                localStorage.setItem('users', JSON.stringify(usersArr))
+            } else {
+                localStorage.setItem('users', JSON.stringify([user]))
+            }
+        } catch (e) {
+
         }
-        if (!validateEmail(email)) setErrorMail(true)
-        if (password.length < 6) setErrorPass(true)
-        if (errorPass || errorMail) return;
-        useAuth(addStringId({email, password}))
     }
 
-    const handleChangeLogin: (e: ChangeEvent) => void = (e) => {
-        // @ts-ignore
-        let value = e.target?.value
-        setEmail(value);
-        if (value === '') setErrorMail(false);
-        else if (validateEmail(value)) setErrorMail(false)
-
-
+    if (state.isAuth) {
+        return (
+            <Navigate to="/" state={{ from: location }}/>
+        );
     }
-    const handleChangePassword: (e: ChangeEvent) => void = (e) => {
-        // @ts-ignore
-        let value = e.target?.value
-        setPassword(value);
-        if (value === '') setErrorPass(false);
-        else if (value.length >= 6) setErrorPass(false)
-    }
-
     return (
-        <Container
-            // @ts-ignore
-            sx={styles.container}>
-            <Box
-                id='signup-form'
-                component="form"
-                // @ts-ignore
-                sx={styles.form}
-                autoComplete="off"
-            >
-                <TextField
-                    error={errorMail}
-                    // @ts-ignore
-                    sx={styles.input}
-                    id="outlined-required"
-                    label="Login"
-                    type="email"
-                    autoComplete="username"
-                    helperText="Send your email"
-                    value={email}
-                    onChange={handleChangeLogin}
-                />
-
-                <TextField
-                    error={errorPass}
-                    // @ts-ignore
-                    sx={styles.input}
-                    id="outlined-password-input"
-                    label="Password"
-                    type="password"
-                    autoComplete="new-password"
-                    helperText={errorPass && "The password must contain at least 6 characters"}
-                    value={password}
-                    onChange={handleChangePassword}
-                />
-
-                <Button disabled={errorMail || errorPass} onClick={handleClick} variant="contained"
-                        endIcon={<SendIcon/>}>
-                    Create account
-                </Button>
-
-                <span style={styles.span}>Already have an account?</span>
-
-                <Button onClick={() => navigate("/signin")} variant="outlined" endIcon={<ArrowForwardOutlinedIcon/>}>
-                    Sign in
-                </Button>
-
-            </Box>
-        </Container>
+        <AuthForm authUser={createUser}>
+            <SignUpBtnGroup />
+        </AuthForm>
     );
 }

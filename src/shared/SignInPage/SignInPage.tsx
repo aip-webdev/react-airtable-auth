@@ -1,91 +1,38 @@
-import React, {ChangeEvent, useState} from 'react';
-import {Box, Button, Container, TextField} from "@mui/material";
-import SendIcon from '@mui/icons-material/Send';
-import HowToRegOutlinedIcon from '@mui/icons-material/HowToRegOutlined';
-import useAuth from "../../hooks/useAuth";
-import styles from "./styles";
-import {validateEmail} from "../../utils/validateEmail";
-import {useNavigate} from "react-router-dom";
-import {addStringId} from "../../utils/react/generateRandomIndex";
-import useAuthNewUser from "../../hooks/useAuthNewUser";
+import React, {useState} from 'react';
+import {IUser} from "../../../types/global";
+import {AuthForm} from "../Components/AuthForm";
+import {filter} from "ramda";
+import {login} from "../../context/actions";
+import {useAppStore} from "../../hooks/useAppStore";
+import {SignInBtnGroup} from "./SignInBtnGroup";
+import {Navigate, useLocation} from "react-router-dom";
 
 export function SignInPage() {
-    let navigate = useNavigate();
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [errorMail, setErrorMail] = useState(false)
-    const [errorPass, setErrorPass] = useState(false)
-    const handleClick: () => void = () => {
-        useAuthNewUser(addStringId({email, password}))
+    const [state, dispatch] = useAppStore();
+    const location = useLocation();
+
+    function auth(user: IUser) {
+        let filterUsersByEmail = filter(((someUser: IUser) => someUser.email === user.email), state.usersData.users);
+        let filterUsersByPassword = filter((someUser:IUser) => someUser.password === user.password, filterUsersByEmail);
+        if (!filterUsersByEmail) {
+            return {type: 'mailError', message:'Аккаунт с таким адресом не зарегистрирован'}
+        } else if (!filterUsersByPassword) {
+            return {type: 'mailPassword', message:'Неверный пароль'}
+        } else {
+            dispatch(login())
+        }
+        console.log(state)
     }
 
-    const handleChangeLogin: (e: ChangeEvent) => void = (e) => {
-        // @ts-ignore
-        let value = e.target?.value
-        setEmail(value);
-        if (value === '') setErrorMail(false);
-        else if (validateEmail(value)) setErrorMail(false)
-
-
-    }
-    const handleChangePassword: (e: ChangeEvent) => void = (e) => {
-        // @ts-ignore
-        let value = e.target?.value
-        setPassword(value);
-        if (value === '') setErrorPass(false);
-        else if (value.length >= 6) setErrorPass(false)
+    if (state.isAuth) {
+        return (
+            <Navigate to="/" state={{ from: location }}/>
+        );
     }
 
     return (
-        <Container
-            // @ts-ignore
-            sx={styles.container}>
-            <Box
-                id='signin-form'
-                component="form"
-                // @ts-ignore
-                sx={styles.form}
-                autoComplete="off"
-            >
-                <TextField
-                    error={errorMail}
-                    // @ts-ignore
-                    sx={styles.input}
-                    id="outlined-required"
-                    label="Login"
-                    type="email"
-                    autoComplete="username"
-                    helperText="Send your email"
-                    value={email}
-                    onChange={handleChangeLogin}
-                />
-
-                <TextField
-                    error={errorPass}
-                    // @ts-ignore
-                    sx={styles.input}
-                    id="outlined-password-input"
-                    label="Password"
-                    type="password"
-                    autoComplete="current-password"
-                    helperText={errorPass && "The password must contain at least 6 characters"}
-                    value={password}
-                    onChange={handleChangePassword}
-                />
-
-                <Button disabled={errorMail || errorPass} onClick={handleClick} variant="contained"
-                        endIcon={<SendIcon/>}>
-                    Sign in
-                </Button>
-
-                <span style={styles.span}>New to this site?</span>
-
-                <Button onClick={() => navigate("/signup")} sx={styles.button} variant="outlined"
-                        endIcon={<HowToRegOutlinedIcon/>}>
-                    Create account
-                </Button>
-
-            </Box>
-        </Container>
+        <AuthForm authUser={auth} >
+            <SignInBtnGroup/>
+        </AuthForm>
     );
 }

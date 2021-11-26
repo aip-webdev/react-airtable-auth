@@ -1,13 +1,13 @@
 import React from "react";
-import { rootReducer} from "./reducers";
-import {MyAction, IStateData, IUsersData} from "../../types/global";
+import {rootReducer} from "./reducers";
+import {IStateData, MyAction} from "../../types/global";
 
 // @ts-ignore
 let AppStateContext = React.createContext();
 // @ts-ignore
 const AppDispatchContext = React.createContext();
 
-function AppProvider({ children, initialState }: {children: React.ReactNode, initialState?: IStateData}) {
+function AppProvider({children}: { children: React.ReactNode}) {
     const initState: IStateData = {
         usersData: {
             users: [],
@@ -16,12 +16,12 @@ function AppProvider({ children, initialState }: {children: React.ReactNode, ini
         },
         isAuth: false
     }
-    const [state, dispatch] = React.useReducer(rootReducer, initialState ? initialState : initState);
+    const [state, dispatch] = React.useReducer(rootReducer, initState);
 
     return (
         <AppStateContext.Provider value={state}>
             <AppDispatchContext.Provider value={dispatch}>
-                { children }
+                {children}
             </AppDispatchContext.Provider>
         </AppStateContext.Provider>
     )
@@ -31,7 +31,7 @@ function useAppState(): IStateData {
     return React.useContext(AppStateContext) as IStateData;
 }
 
-function useAppDispatch(): React.Dispatch<MyAction>{
+function useAppDispatch(): React.Dispatch<MyAction> {
     return React.useContext(AppDispatchContext) as React.Dispatch<MyAction>
 }
 

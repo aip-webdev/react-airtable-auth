@@ -7,7 +7,7 @@ const styles = {
   },
   total: {
     marginBottom: '5rem',
-    color: colors.gallery,
+    color: colors.darkGray,
     alignSelf: 'center'
   }
 }

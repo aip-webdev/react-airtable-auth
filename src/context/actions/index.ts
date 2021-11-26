@@ -51,23 +51,36 @@ export function fetchUsersFailure(): FetchUsersFailureAction {
     }
 }
 
-export const SET_AUTH = 'SET_AUTH';
-export interface SetAuthAction {
-    type: typeof SET_AUTH;
+export const LOGIN = 'LOGIN';
+export interface LoginAction {
+    type: typeof LOGIN;
     payload: boolean;
 }
 
-export function setAuth(isAuth: boolean): SetAuthAction {
+export function login(): LoginAction {
     return {
-        type: SET_AUTH,
-        payload: isAuth
+        type: LOGIN,
+        payload: true
+    }
+}
+
+export const LOGOUT = 'LOGOUT';
+export interface LogoutAction {
+    type: typeof LOGOUT;
+    payload: boolean;
+}
+
+export function logout(): LogoutAction {
+    return {
+        type: LOGOUT,
+        payload: false
     }
 }
 
 export const CREATE_NEW_USER = 'CREATE_NEW_USER';
 export interface CreateNewUserAction {
     type: typeof CREATE_NEW_USER,
-    payload: IUser []
+    payload: IUser[]
 }
 
 export function createNewUser(user: IUser): CreateNewUserAction {
