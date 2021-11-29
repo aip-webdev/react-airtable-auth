@@ -1,1 +1,1 @@
-React with Airtable auth task
+`npm run dev` to run project

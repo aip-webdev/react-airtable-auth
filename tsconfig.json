@@ -3,7 +3,7 @@
     "alwaysStrict": true,
     "strictNullChecks": true,
     "strictFunctionTypes": true,
-    
+
     "target": "es5",
     "module": "commonjs",
     "lib": [
@@ -23,6 +23,5 @@
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "moduleResolution": "node",
-    "isolatedModules": true
   }
 }

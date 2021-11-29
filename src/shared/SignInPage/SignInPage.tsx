@@ -1,35 +1,33 @@
 import React from 'react';
 import {IUser, IUsersData} from "../../../types/global";
 import {AuthForm} from "../Components/AuthForm";
-import {filter} from "ramda";
 import {login} from "../../context/actions";
 import {useAppStore} from "../../hooks/useAppStore";
 import {SignInBtnGroup} from "../Components/SignInBtnGroup";
-import {Navigate, useLocation} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import useUsersData from "../../hooks/useUsersData";
 
 export function SignInPage() {
     const [state, dispatch] = useAppStore();
-    const location = useLocation();
+    const navigate = useNavigate();
     let {users, loading, error}: IUsersData = useUsersData()
 
     function auth(user: IUser) {
         if (loading || error) return;
-        let filterUsersByEmail = filter(((someUser: IUser) => someUser.email === user.email), users);
-        let filterUsersByPassword = filter((someUser:IUser) => someUser.password === user.password, filterUsersByEmail);
+        let filterUsersByEmail = users.filter((someUser: IUser) => someUser.email === user.email);
+        let filterUsersByPassword = filterUsersByEmail.filter((someUser:IUser) => someUser.password === user.password);
         if (!filterUsersByEmail) {
-            return {type: 'mailError', message:'Аккаунт с таким адресом не зарегистрирован'}
+            return {type: 'mailError', message:'Account with this address is not registered'}
         } else if (!filterUsersByPassword) {
-            return {type: 'mailPassword', message:'Неверный пароль'}
+            return {type: 'mailPassword', message:'Wrong password'}
         } else {
             dispatch(login())
+            navigate("/")
         }
     }
 
     if (state.isAuth) {
-        return (
-            <Navigate to="/" state={{ from: location }}/>
-        );
+        navigate("/")
     }
 
     return (

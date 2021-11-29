@@ -4,22 +4,22 @@ import {IUser, IUsersData} from "../../../types/global";
 import {AuthForm} from "../Components/AuthForm";
 import {createNewUser} from "../../context/actions";
 import {SignUpBtnGroup} from "../Components/SignUpBtnGroup";
-import {Navigate, useLocation} from "react-router-dom";
-import {filter} from "ramda";
+import {useNavigate} from "react-router-dom";
 import useUsersData from "../../hooks/useUsersData";
 
 export function SignUpPage() {
     const [state, dispatch] = useAppStore()
-    const location = useLocation();
+    const navigate = useNavigate();
     let {users, loading, error}: IUsersData = useUsersData()
     function createUser (user: IUser) {
         if (loading || error) return;
         try {
             if (users) users = Array.of(...users)
-            let duplicate = filter((someUser: IUser) => someUser.email === user.email, users)
-            if (duplicate.length > 0) return {type: 'mailError', message:'Аккаунт с таким адресом уже зарегистрирован'};
+            let duplicate = users.filter((someUser: IUser) => someUser.email === user.email);
+            if (duplicate.length > 0) return {type: 'mailError', message:'An account with this address has already been registered'};
 
             dispatch(createNewUser(user))
+            navigate("/")
             let usersArr: IUser[] = JSON.parse(localStorage.getItem('users') as string)
             if (usersArr) {
                 usersArr.push(user)
@@ -33,9 +33,9 @@ export function SignUpPage() {
     }
 
     if (state.isAuth) {
-        return (
-            <Navigate to="/" state={{ from: location }}/>
-        );
+        if (state.isAuth) {
+            navigate("/")
+        }
     }
     return (
         <AuthForm authUser={createUser}>

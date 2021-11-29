@@ -99,8 +99,8 @@ export const AuthForm = ({children, authUser}: IAuthProps) => {
                 .then((res) => {
                     setChildWithProps(res)
                 })
-        } catch (e: any) {
-            console.log(e.toString())
+        } catch (e) {
+            console.log(e)
         }
 
     }, [children, errorMail && errorPass, user])

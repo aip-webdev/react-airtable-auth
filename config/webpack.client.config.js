@@ -6,7 +6,9 @@ const NODE_ENV = process.env.NODE_ENV;
 const IS_DEV = NODE_ENV === 'development';
 const IS_PROD = NODE_ENV === 'production';
 const GLOBAL_CSS_REGEXP = /\.global\.css$/;
-const DEV_PLUGINS = [new CleanWebpackPlugin(), new HotModuleReplacementPlugin()];
+const DEV_PLUGINS = [new CleanWebpackPlugin({
+    cleanOnceBeforeBuildPatterns: ['**/dist/client/', '**/dist/server/']
+}), new HotModuleReplacementPlugin()];
 
 function setupDevtool() {
     if (IS_DEV) return 'eval';
@@ -21,10 +23,10 @@ module.exports = {
         }
     },
     mode: NODE_ENV ? NODE_ENV : 'development',
-    entry: [
+    entry: IS_DEV ? [
         'webpack-hot-middleware/client?path=http://localhost:3001/static/__webpack_hmr',
         path.resolve(__dirname, '../src/client/index.js'),
-    ],
+    ] : [path.resolve(__dirname, '../src/client/index.js')],
     output: {
         path: path.resolve(__dirname, '../dist/client'),
         filename: 'client.js',
@@ -66,7 +68,7 @@ module.exports = {
     plugins: IS_DEV
         ? DEV_PLUGINS : [],
     watchOptions: {
-        ignored: /dist/,
+        ignored: ['**/dist/', '**/node_modules']
     },
     stats: "errors-only",
 };
