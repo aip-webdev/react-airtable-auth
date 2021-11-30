@@ -1,6 +1,6 @@
 
 import {
-    FetchBooksAction, FetchBooksFailureAction, FetchBooksSuccessAction, LoginAction,
+    LogoutAction, FetchUsersSuccessAction, FetchUsersAction, LoginAction, CreateNewUserAction
 } from "../src/context/actions";
 
 export interface IUser {
@@ -20,4 +20,4 @@ export interface IStateData {
     isAuth: boolean;
 }
 
-export type MyAction = FetchUsersAction | FetchUsersSuccessAction | FetchUsersFailureAction | LoginAction | CreateNewUserAction
+export type MyAction = FetchUsersAction | FetchUsersSuccessAction | FetchUsersFailureAction | LoginAction | LogoutAction | CreateNewUserAction

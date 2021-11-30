@@ -1,8 +1,7 @@
-    import {hot} from 'react-hot-loader/root';
+import {hot} from 'react-hot-loader/root';
 import CssBaseline from '@mui/material/CssBaseline';
 import {ThemeProvider} from '@mui/material/styles';
 import theme from './styles/theme';
-
 import HomePage from './shared/HomePage/HomePage';
 import React from 'react';
 import {AppProvider} from "./context";
@@ -12,10 +11,11 @@ import {SignUpPage} from "./shared/SignUpPage";
 import {RequiredAuth} from "./shared/Components/RequiredAuth";
 import useAuthData from "./hooks/useAuthData";
 import {NoMatchPage} from "./shared/NoMatchPage";
+import useUsersData from "./hooks/useUsersData";
 
 function AppComponent() {
-    useAuthData()
-
+    const isAuth = useAuthData()
+    const {users, error, loading} = useUsersData()
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline/>

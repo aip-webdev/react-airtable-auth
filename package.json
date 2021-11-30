@@ -8,9 +8,9 @@
   },
   "scripts": {
     "run":"npm install --ignore-scripts",
-    "dev": "cross-env NODE_ENV=development node .\\bin\\dev.js",
+    "dev": "cross-env NODE_ENV=development node ./bin/dev.js",
     "build": "cross-env NODE_ENV=production webpack --config webpack.config.js",
-    "start": "cross-env NODE_ENV=production node .\\dist\\server\\server.js"
+    "start": "cross-env NODE_ENV=production cross-env PORT=3001 node ./dist/server/server.js"
   },
   "author": "PetrenkoAI",
   "license": "ISC",

@@ -1,26 +1,31 @@
 import {useEffect} from 'react'
 
 import {useAppStore} from "./useAppStore";
-import {fetchUsers, fetchUsersSuccess} from "../context/actions";
-import {IUser, IUsersData} from "../../types/global";
-
+import {fetchUsers, fetchUsersFailure, fetchUsersSuccess} from "../context/actions";
+import {IUser} from "../../types/global";
 
 export default function useUsersData() {
     const [{usersData, isAuth}, dispatch] = useAppStore();
-
+        useEffect(() => {
+            try {
+                dispatch(fetchUsers());
+                let users: IUser[] = JSON.parse(<string>localStorage.getItem('users'));
+                if (users && users.length > usersData.users.length) {
+                    dispatch(fetchUsersSuccess(users))
+                } else dispatch(fetchUsersSuccess([]))
+            } catch (e: any) {
+                dispatch(fetchUsersFailure())
+            }
+        }, [])
     useEffect(() => {
         if (usersData.loading) return;
-        dispatch(fetchUsers());
         try {
-            ( async () => {
-                let users: IUser[] = await JSON.parse(<string>localStorage.getItem('users'));
-                dispatch(fetchUsersSuccess(users))
-            })()
+            //async action
+            localStorage.setItem('users', JSON.stringify(usersData.users))
         } catch (e: any) {
-            console.log(e.message)
+            dispatch(fetchUsersFailure())
         }
-
-    }, [])
+    }, [usersData.users])
     return {...usersData};
 }
 

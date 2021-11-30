@@ -16,12 +16,14 @@ export default function HomePage() {
     const [state, dispatch] = useAppStore()
 
     useEffect(() => {
-        if (!state.isAuth) navigate("/signin")
-    }, [state.isAuth])
+        if (!state.isAuth) {
+            navigate("/signin")
+        }
+    }, [])
 
     function handleClick() {
         dispatch(logout())
-        localStorage.setItem('isAuth', JSON.stringify( false))
+        navigate("/signin")
     }
 
     return (

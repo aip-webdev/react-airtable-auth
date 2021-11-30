@@ -5,6 +5,8 @@ import {IUser} from "../../../../types/global";
 import Container from "@mui/material/Container";
 import {Box, TextField} from "@mui/material";
 import styles from "./styles";
+import {props} from "ramda";
+import {useAppStore} from "../../../hooks/useAppStore";
 
 
 export interface ISignBtnProps {
@@ -53,12 +55,12 @@ export const AuthForm = ({children, authUser}: IAuthProps) => {
         if (errorPass || errorMail) return;
         else {
             let res = authUser({id, email, password})
+            console.log(res)
             if (!!res) {
                 res.type === 'mailError' ?
                     setErrorMail({errorMail: true, errorMailText: res.message} ) :
                     setErrorPass({errorPass: true, errorPassText: res.message} )
             } else {
-                localStorage.setItem('isAuth', JSON.stringify( true))
                 setEmail('');
                 setPassword('');
             }
@@ -87,7 +89,7 @@ export const AuthForm = ({children, authUser}: IAuthProps) => {
                 return React.Children.map(children, child => {
                     if (React.isValidElement(child)) {
                         return React.cloneElement(child, {
-                            ...child.props,
+                            ...props,
                             handleClick: (user: IUser) => handleClick(user),
                             inputError: errorMail && errorPass,
                             user: user
@@ -120,7 +122,7 @@ export const AuthForm = ({children, authUser}: IAuthProps) => {
                     // @ts-ignore
                     sx={styles.input}
                     id="outlined-required"
-                    label="Login"
+                    label="E-mail"
                     type="email"
                     autoComplete="username"
                     helperText={errorMailText}

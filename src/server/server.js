@@ -7,11 +7,12 @@ import helmet from 'helmet';
 import {App} from "../App"
 import {indexTemplate} from "./indexTemplate";
 import React from "react";
+const IS_DEV = process.env.NODE_ENV !== 'production';
 
-const PORT = process.env.PORT || 3000;
+const PORT = IS_DEV ? process.env.PORT || 4000 : process.env.PORT || 3000;
 
 const app = express();
-if (process.env.NODE_ENV === 'production') {
+if (!IS_DEV) {
     app.use(compression());
     app.use(helmet({
         contentSecurityPolicy: false,
@@ -31,7 +32,7 @@ app.get('*', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-    if (process.env.NODE_ENV !== 'production') console.log(`Server started on http://localhost:${PORT}`);
+    console.log(`Server started on http://localhost:${PORT}`);
 })
 
 
