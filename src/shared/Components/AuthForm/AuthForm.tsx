@@ -5,7 +5,7 @@ import {IUser} from "../../../../types/global";
 import Container from "@mui/material/Container";
 import {Box, TextField} from "@mui/material";
 import styles from "./styles";
-import {props} from "ramda";
+
 
 export interface ISignBtnProps {
     inputError?: boolean,
@@ -87,7 +87,7 @@ export const AuthForm = ({children, authUser}: IAuthProps) => {
                 return React.Children.map(children, child => {
                     if (React.isValidElement(child)) {
                         return React.cloneElement(child, {
-                            ...props,
+                            ...child.props,
                             handleClick: (user: IUser) => handleClick(user),
                             inputError: errorMail && errorPass,
                             user: user
