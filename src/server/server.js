@@ -32,7 +32,9 @@ app.get('*', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Server started on http://localhost:${PORT}`);
+    if (IS_DEV) {
+        console.log(`Server started on http://localhost:${PORT}`);
+    }
 })
 
 

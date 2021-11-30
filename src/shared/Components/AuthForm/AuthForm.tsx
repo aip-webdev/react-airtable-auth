@@ -55,7 +55,6 @@ export const AuthForm = ({children, authUser}: IAuthProps) => {
         if (errorPass || errorMail) return;
         else {
             let res = authUser({id, email, password})
-            console.log(res)
             if (!!res) {
                 res.type === 'mailError' ?
                     setErrorMail({errorMail: true, errorMailText: res.message} ) :
