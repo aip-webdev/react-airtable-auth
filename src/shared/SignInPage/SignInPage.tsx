@@ -14,24 +14,26 @@ export function SignInPage() {
 
     function auth(user: IUser) {
         if (loading || error) return;
+
         let filterUsersByEmail = users.filter((someUser: IUser) => someUser.email === user.email);
-        let filterUsersByPassword = filterUsersByEmail.filter((someUser:IUser) => someUser.password === user.password);
-        if (!filterUsersByEmail) {
-            return {type: 'mailError', message:'Account with this address is not registered'}
-        } else if (!filterUsersByPassword) {
-            return {type: 'mailPassword', message:'Wrong password'}
+        let filterUsersByPassword = filterUsersByEmail.filter((someUser: IUser) => someUser.password === user.password);
+        if (filterUsersByEmail.length < 1) {
+            return {type: 'mailError', message: 'Account with this address is not registered'}
+        } else if (filterUsersByPassword.length < 1) {
+            return {type: 'mailPassword', message: 'Wrong password'}
         } else {
             dispatch(login())
             navigate("/")
         }
     }
 
+
     if (state.isAuth) {
         navigate("/")
     }
 
     return (
-        <AuthForm authUser={auth} >
+        <AuthForm authUser={auth}>
             <SignInBtnGroup/>
         </AuthForm>
     );

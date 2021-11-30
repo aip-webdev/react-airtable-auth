@@ -1,4 +1,4 @@
-import {hot} from 'react-hot-loader/root';
+    import {hot} from 'react-hot-loader/root';
 import CssBaseline from '@mui/material/CssBaseline';
 import {ThemeProvider} from '@mui/material/styles';
 import theme from './styles/theme';

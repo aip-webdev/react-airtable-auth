@@ -3,7 +3,7 @@ const [ webpackClientConfig, webpackServerConfig ] = require('../webpack.config.
 const nodemon = require('nodemon');
 const path = require('path');
 const express = require('express');
-
+const IS_DEV = process.env.NODE_ENV === 'development';
 const hmrServer = express();
 const clientCompiler = webpack(webpackClientConfig);
 
@@ -17,7 +17,7 @@ hmrServer.use(require('webpack-hot-middleware')(clientCompiler, {
     path: '/static/__webpack_hmr',
 }));
 hmrServer.listen(3001, () => {
-   console.log('HMR server start on port 3001');
+   if (IS_DEV) console.log('HMR server start on port 3001');
 });
 
 let compiler = webpack(webpackServerConfig);
@@ -26,16 +26,16 @@ let isFirstRun = true;
 
  compiler.run( (err) => {
      if (err) {
-         console.log('Compilation failed: ', err);
+         if (IS_DEV) console.log('Compilation failed: ', err);
      }
      compiler = webpack(webpackServerConfig);
 
      compiler.watch({}, (err) => {
          if (err) {
-             console.log('Compilation failed: ', err);
-         }
+             if (IS_DEV) console.log('Compilation failed: ', err);
 
-         console.log('Compilation was successfully');
+         }
+         if (IS_DEV) console.log('Compilation was successfully');
      })
 
      if (isFirstRun) {
@@ -46,8 +46,7 @@ let isFirstRun = true;
                  path.resolve(__dirname, '../dist/client'),
              ]
          });
-
-         console.log('Nodemon started');
+         if (IS_DEV) console.log('Nodemon started');
 
          isFirstRun = false;
      }

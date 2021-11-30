@@ -8,9 +8,17 @@ import {Button} from "@mui/material";
 import {useAppStore} from "../../hooks/useAppStore";
 import {logout} from "../../context/actions";
 import Typography from "@mui/material/Typography";
+import {useEffect} from "react";
+import {useNavigate} from "react-router-dom";
 
 export default function HomePage() {
-    let [state, dispatch] = useAppStore()
+    const navigate = useNavigate();
+    const [state, dispatch] = useAppStore()
+
+    useEffect(() => {
+        if (!state.isAuth) navigate("/signin")
+    }, [state.isAuth])
+
     function handleClick() {
         dispatch(logout())
         localStorage.setItem('isAuth', JSON.stringify( false))
@@ -18,8 +26,8 @@ export default function HomePage() {
 
     return (
         <Box sx={{ flexGrow: 1, display: 'grid', placeItems: 'center', color: 'rgba(0, 0, 0, 0.6)'}}>
-            <AppBar position='static'>
-                <Toolbar sx={{padding: '0 10%', display: 'flex', justifyContent: 'end'}} >
+            <AppBar position='static' >
+                <Toolbar sx={{padding: '0 10%', display: 'grid', placeItems:'end', alignItems: 'center'}} >
                     <Button sx={{color: 'white'}}  onClick={handleClick} variant='outlined' endIcon={<LogoutOutlinedIcon/>}>
                         Logout
                     </Button>
