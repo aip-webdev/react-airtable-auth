@@ -1,42 +1,53 @@
-    import {hot} from 'react-hot-loader/root';
-import CssBaseline from '@mui/material/CssBaseline';
+import {CssBaseline} from '@mui/material';
 import {ThemeProvider} from '@mui/material/styles';
-import theme from './styles/theme';
+import theme from './styles/main-theme';
+import React, {useEffect, useState} from 'react';
+import {Navigate, Outlet, Route, Routes} from "react-router-dom";
+import {NoMatchPage} from "./shared/Pages/NoMatchPage";
+import {HomePage} from "./shared/Pages/HomePage";
+import {SignInPage} from "./shared/Pages/SignInPage";
+import {SignUpPage} from "./shared/Pages/SignUpPage";
+import {Header} from "./shared/Components/Header";
+import {Content} from "./shared/Components/Content";
+import {Loading} from "./shared/Components/Loading";
 
-import HomePage from './shared/HomePage/HomePage';
-import React from 'react';
-import {AppProvider} from "./context";
-import {SignInPage} from "./shared/SignInPage";
-import {Route, Routes} from "react-router-dom";
-import {SignUpPage} from "./shared/SignUpPage";
-import {RequiredAuth} from "./shared/Components/RequiredAuth";
-import useAuthData from "./hooks/useAuthData";
-import {NoMatchPage} from "./shared/NoMatchPage";
+const AppComponent = () => {
+    const [isLoaded, setIsLoaded] = useState(false)
+    useEffect(() => {
+        setIsLoaded(true)
+    }, [])
+    if (!isLoaded) {
+        return (
+            <Loading/>
+        )
+    } else {
+        return (
+            <>
+                <Header/>
+                <Content>
+                    <Outlet/>
+                </Content>
+            </>
+        )
+    }
+}
 
-function AppComponent() {
-    useAuthData()
-
+export const App = () => {
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline/>
             <Routes>
-                <Route path='/' element={
-                    <RequiredAuth>
-                        <HomePage/>
-                    </RequiredAuth>
-                }/>
+                <Route path="/" element={<AppComponent/>}>
+                    <Route index element={<Navigate to="/home"/>}/>
+                    <Route path='/home' element={<HomePage/>}/>
+                </Route>
                 <Route path='/signin' element={<SignInPage/>}/>
                 <Route path='/signup' element={<SignUpPage/>}/>
                 <Route path="*" element={<NoMatchPage/>}/>
             </Routes>
         </ThemeProvider>
+
     )
 }
 
-export const App = hot(() => {
-    return (
-        <AppProvider>
-            <AppComponent/>
-        </AppProvider>
-    )
-});
+

@@ -1,37 +1,34 @@
-import express from 'express';
-import compression from 'compression';
-import ReactDOMServer from 'react-dom/server';
-import { StaticRouter } from "react-router-dom/server";
-import helmet from 'helmet';
+import fs from 'fs'
+import express from 'express'
+import React from 'react'
+import ReactDOM from 'react-dom/server';
+import {StaticRouter} from "react-router-dom/server";
+import {App} from '../App'
+import {indexTemplate} from './indexTemplate'
+import helmet from "helmet";
 
-import {App} from "../App"
-import {indexTemplate} from "./indexTemplate";
-import React from "react";
+const port = 3000
+const app = express()
+const jsFiles = []
 
-const PORT = process.env.PORT || 3000;
+fs.readdirSync('./public/dist/assets')
+    .forEach(file => {
+        if (file.split('.').pop() === 'js') jsFiles.push('/assets/' + file)
+    })
 
-const app = express();
-if (process.env.NODE_ENV === 'production') {
-    app.use(compression());
-    app.use(helmet({
-        contentSecurityPolicy: false,
-    }))
-}
-app.use('/static', express.static('./dist/client'));
-app.use('/img-src', express.static('./dist/img-src'));
-
+app.use('/assets', express.static('./public/dist/assets'))
+app.use(helmet({contentSecurityPolicy: false}))
 app.get('*', async (req, res) => {
-    await res.send(
-        indexTemplate(ReactDOMServer.renderToString(
+    res.send(
+        indexTemplate(ReactDOM.renderToString(
             <StaticRouter location={req.url}>
-                {App()}
+                <App/>
             </StaticRouter>
+            ),
+            ReactDOM.renderToString(
+                jsFiles.map((script, index) => <script src={script} key={index}/>)
+            )
         ))
-    );
-});
-
-app.listen(PORT, () => {
-    if (process.env.NODE_ENV !== 'production') console.log(`Server started on http://localhost:${PORT}`);
 })
 
-
+app.listen(port, () => console.log(`Listening on port http://localhost:${port}`))

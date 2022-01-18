@@ -3,11 +3,11 @@
     "alwaysStrict": true,
     "strictNullChecks": true,
     "strictFunctionTypes": true,
-
     "target": "es5",
-    "module": "commonjs",
+    "module": "ESNext",
     "lib": [
       "dom",
+      "dom.iterable",
       "esnext"
     ],
     "allowJs": true,
@@ -22,6 +22,11 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
-    "moduleResolution": "node",
+    "moduleResolution": "node"
+  },
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS"
+    }
   }
 }

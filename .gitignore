@@ -1,5 +1,20 @@
-/.idea
-/node_modules/
-events.json
-/src/cache/
-/package-lock.json
+# dependencies
+/node_modules
+
+# System Files
+.DS_Store
+Thumbs.db
+[Dd]esktop.ini
+
+# Links
+*.lnk
+.idea/
+*.PEM
+.vscode/
+
+# Logs
+npm-debug.log
+
+# Block build and server
+/dist
+/server

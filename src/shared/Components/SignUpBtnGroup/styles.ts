@@ -1,17 +1,21 @@
-const styles = {
+import colors from "../../../utils/enums/colors";
+import {makeStyles} from "@mui/styles";
+
+const useStyles = makeStyles( {
   block: {
     display: 'flex',
     flexDirection: 'column',
   },
-  button: {
+  firstButton: {
+  },
+  secondButton: {
     padding: '6px 0',
     width: '100%',
   },
   span: {
     fontSize: '1 rem',
-    color: 'rgba(0, 0, 0, 0.6)',
-    margin: '15px auto 7px',
+    margin: '15px auto 15px',
   }
-}
+})
 
-export default styles;
+export default useStyles;

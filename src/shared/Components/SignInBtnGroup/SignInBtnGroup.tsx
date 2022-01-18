@@ -3,18 +3,18 @@ import {Button} from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import HowToRegOutlinedIcon from "@mui/icons-material/HowToRegOutlined";
 import {useNavigate} from "react-router-dom";
-import styles from "./styles";
+import useStyles from "./styles";
 import {ISignBtnProps} from "../AuthForm";
 
 
-export function SignInBtnGroup(props: ISignBtnProps) {
+export const SignInBtnGroup = React.memo((props: ISignBtnProps) => {
+    const classes = useStyles()
     const {inputError, handleClick, user} = props;
     let navigate = useNavigate();
     return (
-        <div
-            // @ts-ignore
-            style={styles.block}>
+        <div className={classes.block}>
             <Button
+                className={classes.firstButton}
                 disabled={inputError}
                 variant="contained"
                 endIcon={<SendIcon/>}
@@ -23,12 +23,12 @@ export function SignInBtnGroup(props: ISignBtnProps) {
                 Sign in
             </Button>
 
-            <span style={styles.span}>New to this site?</span>
+            <span className={classes.span}>New to this site?</span>
 
-            <Button onClick={() => navigate("/signup")} sx={styles.button} variant="outlined"
+            <Button className={classes.secondButton} onClick={() => navigate("/signup")} variant="outlined"
                     endIcon={<HowToRegOutlinedIcon/>}>
                 Create account
             </Button>
         </div>
     )
-}
+})

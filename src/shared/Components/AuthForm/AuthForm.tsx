@@ -1,11 +1,13 @@
+import React, {ChangeEvent, useEffect, useState} from "react";
+import Container from "@mui/material/Container";
+import {Box, CssBaseline, TextField} from "@mui/material";
+import useStyles from "./styles";
+import {props} from "ramda";
+import {IUser} from "../../../../types/global";
 import {addStringId} from "../../../utils/react/generateRandomIndex";
 import {validateEmail} from "../../../utils/validateEmail";
-import React, {ChangeEvent, useEffect, useState} from "react";
-import {IUser} from "../../../../types/global";
-import Container from "@mui/material/Container";
-import {Box, TextField} from "@mui/material";
-import styles from "./styles";
-import {props} from "ramda";
+import authTheme from "../../../styles/auth-theme";
+import {ThemeProvider} from "@mui/material/styles";
 
 export interface ISignBtnProps {
     inputError?: boolean,
@@ -15,10 +17,11 @@ export interface ISignBtnProps {
 
 interface IAuthProps {
     children: React.ReactNode,
-    authUser: (user: IUser) => { type:string, message:string } | undefined,
+    authUser: (user: IUser) => { type: string, message: string } | undefined,
 }
 
-export const AuthForm = ({children, authUser}: IAuthProps) => {
+export const AuthForm = React.memo(({children, authUser}: IAuthProps) => {
+    const classes = useStyles()
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [{errorMail, errorMailText}, setErrorMail] = useState({errorMail: false, errorMailText: ''})
@@ -55,10 +58,9 @@ export const AuthForm = ({children, authUser}: IAuthProps) => {
             let res = authUser({id, email, password})
             if (!!res) {
                 res.type === 'mailError' ?
-                    setErrorMail({errorMail: true, errorMailText: res.message} ) :
-                    setErrorPass({errorPass: true, errorPassText: res.message} )
+                    setErrorMail({errorMail: true, errorMailText: res.message}) :
+                    setErrorPass({errorPass: true, errorPassText: res.message})
             } else {
-                localStorage.setItem('isAuth', JSON.stringify( true))
                 setEmail('');
                 setPassword('');
             }
@@ -106,42 +108,39 @@ export const AuthForm = ({children, authUser}: IAuthProps) => {
     }, [children, errorMail && errorPass, user])
 
     return (
-        <Container
-            // @ts-ignore
-            sx={styles.container}>
-            <Box
-                // @ts-ignore
-                sx={styles.box}
-                component='form'
-                autoComplete="off"
-            >
-                <TextField
-                    error={errorMail}
-                    // @ts-ignore
-                    sx={styles.input}
-                    id="outlined-required"
-                    label="Login"
-                    type="email"
-                    autoComplete="username"
-                    helperText={errorMailText}
-                    value={email}
-                    onChange={(e) => handleChangeLogin(e)}
-                />
+        <ThemeProvider theme={authTheme}>
+            <CssBaseline/>
+            <Container className={classes.container}>
+                <Box className={classes.box} sx={{backgroundColor: 'secondary.main'}} component='form'
+                     autoComplete="off">
+                    <TextField
+                        error={errorMail}
+                        className={classes.input}
+                        id="outlined-required"
+                        label="E-mail"
+                        type="email"
+                        sx={{borderColor: 'text.primary'}}
+                        autoComplete="email"
+                        variant='outlined'
+                        helperText={errorMailText}
+                        value={email}
+                        onChange={(e) => handleChangeLogin(e)}
+                    />
 
-                <TextField
-                    error={errorPass}
-                    // @ts-ignore
-                    sx={styles.input}
-                    id="outlined-password-input"
-                    label="Password"
-                    type="password"
-                    autoComplete="current-password"
-                    helperText={errorPassText}
-                    value={password}
-                    onChange={(e) => handleChangePassword(e)}
-                />
-                {!!childWithProps && childWithProps}
-            </Box>
-        </Container>
+                    <TextField
+                        error={errorPass}
+                        className={classes.input}
+                        id="outlined-password-input"
+                        label="Password"
+                        type="password"
+                        autoComplete="current-password"
+                        helperText={errorPassText}
+                        value={password}
+                        onChange={(e) => handleChangePassword(e)}
+                    />
+                    {!!childWithProps && childWithProps}
+                </Box>
+            </Container>
+        </ThemeProvider>
     );
-};
+})
